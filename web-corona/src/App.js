@@ -6,44 +6,27 @@ class Form extends React.Component {
     super(props);
     this.state = {
       squares: {},
-      listt: [
-        {
-          id: "Q1",
-          text:
-            "Have you come into close contact with someone who has tested positive for COVID19 ?"
-        },
-        {
-          id: "Q2",
-          text: "Do you have difficulty when breathing?"
-        },
-        {
-          id: "Q3",
-          text: "Do you have fever or a dry cough ?"
-        },
-        {
-          id: "Q4",
-          text: "Do you have aches , pains or a runny nose ?"
-        },
-        {
-          id: "Q5",
-          text: "Do you have aches , pains or a runny ?"
-        },
-        {
-          id: "Q6",
-          text: "Do you have aches  or a runny nose ?"
-        }
-      ]
+      listt: []
     };
   }
 
   handleClick = Event => {
     const squares2 = this.state.squares;
-    squares2[Event.target.name] = Event.target.value;
+    const question = Event.target.name;
+    const answer = Event.target.value;
+    squares2[question] = { question: question, text: answer };
     this.setState({
-      selectedOption: Event.target.value,
       squares: squares2
     });
   };
+
+  componentDidMount() {
+    fetch("http://localhost:5000/questions/")
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ listt: data.questions });
+      });
+  }
 
   render() {
     return (
@@ -111,14 +94,30 @@ class Form extends React.Component {
               </label>
             </div>
           ))}
-
-          <div>
-            <button className="btn"> Submit </button>
-          </div>
         </form>
+        <div>
+          <button
+            className="btn"
+            onClick={() => {
+              onSubmit(this.state.squares);
+            }}
+          >
+            {" "}
+            Submit{" "}
+          </button>
+        </div>
       </div>
     );
   }
 }
 
+const onSubmit = answersArray => {
+  fetch("http://localhost:5000/answer", {
+    method: "POST",
+    body: JSON.stringify({
+      answers: answersArray
+    }),
+    headers: { "Content-Type": "application/json" }
+  });
+};
 export default Form;
