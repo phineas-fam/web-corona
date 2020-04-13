@@ -5,12 +5,6 @@ class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedOption: null,
-      firstQuestion: null,
-      secondQuestion: null,
-      thirdQuestion: null,
-      showButton: null,
-      isActive: false,
       squares: {},
       listt: [
         {
@@ -29,6 +23,14 @@ class Form extends React.Component {
         {
           id: "Q4",
           text: "Do you have aches , pains or a runny nose ?"
+        },
+        {
+          id: "Q5",
+          text: "Do you have aches , pains or a runny ?"
+        },
+        {
+          id: "Q6",
+          text: "Do you have aches  or a runny nose ?"
         }
       ]
     };
@@ -38,7 +40,6 @@ class Form extends React.Component {
     const squares2 = this.state.squares;
     squares2[Event.target.name] = Event.target.value;
     this.setState({
-      isActive: true,
       selectedOption: Event.target.value,
       squares: squares2
     });
@@ -62,59 +63,59 @@ class Form extends React.Component {
               <b> Online Survey</b>
             </div>
           </div>
-
-          <form>
-            {this.state.listt.map(question => (
-              <div>
-                <h5>
-                  <b>{question["text"]}</b>
-                </h5>
-
-                <input
-                  id={`${question["id"]}_Yes`}
-                  className="radio-custom"
-                  name={question["id"]}
-                  type="radio"
-                  value="Yes"
-                  onClick={() => {
-                    this.setState({ firstQuestion: true });
-                  }}
-                  onChange={this.handleClick}
-                />
-                <label
-                  htmlFor={`${question["id"]}_Yes`}
-                  style={{ fontSize: "14px" }}
-                  className="radio-custom-label"
-                >
-                  Yes
-                </label>
-
-                <input
-                  id={`${question["id"]}_No`}
-                  className="radio-custom"
-                  name={question["id"]}
-                  type="radio"
-                  value="No"
-                  onClick={() => {
-                    this.setState({ firstQuestion: true });
-                  }}
-                  onChange={this.handleClick}
-                />
-                <label
-                  htmlFor={`${question["id"]}_No`}
-                  style={{ fontSize: "14px" }}
-                  className="radio-custom-label"
-                >
-                  No
-                </label>
-              </div>
-            ))}
-
-            <div>
-              <button className="btn"> Submit </button>
-            </div>
-          </form>
         </header>
+
+        <form>
+          {this.state.listt.map(question => (
+            <div key={question.id}>
+              <h2>
+                <b>{question["text"]}</b>
+              </h2>
+
+              <input
+                id={`${question["id"]}_Yes`}
+                className="radio-custom"
+                name={question["id"]}
+                type="radio"
+                value="Yes"
+                onClick={() => {
+                  this.setState({ firstQuestion: true });
+                }}
+                onChange={this.handleClick}
+              />
+              <label
+                htmlFor={`${question["id"]}_Yes`}
+                style={{ fontSize: "14px" }}
+                className="radio-custom-label"
+              >
+                Yes
+              </label>
+
+              <input
+                id={`${question["id"]}_No`}
+                className="radio-custom"
+                name={question["id"]}
+                type="radio"
+                value="No"
+                onClick={() => {
+                  this.setState({ firstQuestion: true });
+                }}
+                onChange={this.handleClick}
+              />
+              <label
+                htmlFor={`${question["id"]}_No`}
+                style={{ fontSize: "14px" }}
+                className="radio-custom-label"
+              >
+                No
+              </label>
+            </div>
+          ))}
+
+          <div>
+            <button className="btn"> Submit </button>
+          </div>
+        </form>
       </div>
     );
   }
