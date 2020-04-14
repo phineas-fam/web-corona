@@ -24,7 +24,7 @@ class Form extends React.Component {
     fetch("http://localhost:5000/questions/")
       .then(response => response.json())
       .then(data => {
-        this.setState({ listt: data.questions });
+        this.setState({ listt: data });
       });
   }
 
