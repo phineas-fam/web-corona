@@ -6,57 +6,47 @@ class Form extends React.Component {
     super(props);
     this.state = {
       squares: {},
-      listt: [{"id":0,"text":"Have you come into close contact with someone who has tested positive for COVID19 ?"},{"id":1,"text":"Do you have difficulty when breathing?"},{"id":2,"text":"Do you have fever or a dry cough ?"}],
-      showNext:[true],
-      index : 1
+      listt: [],
+      showNext: [true],
+      index: 0,
+      shownQuestions: [],
     };
   }
 
-  handleClick = Event => {
+  handleClick = (Event) => {
     const squares2 = this.state.squares;
     const question = Event.target.name;
     const answer = Event.target.value;
     const showElemnts = this.state.showNext;
-    //  showElemnts[0] will always be true 
-    showElemnts[0]=true; 
-    showElemnts[this.state.index]=true;
-    const new_index =this.state.index + 1;
-    console.log(new_index);
+    let new_index = this.state.index;
+    let new_shown = this.state.shownQuestions;
+
+    if (this.state.shownQuestions.indexOf(question) === -1) {
+      new_shown[this.state.index] = question;
+      new_index = this.state.index + 1;
+      showElemnts[new_index] = true;
+    }
+
     squares2[question] = { question: question, text: answer };
+
     this.setState({
       squares: squares2,
-      showNext:showElemnts,
-      index : new_index
+      showNext: showElemnts,
+      index: new_index,
+      shownQuestions: new_shown,
     });
   };
 
-  // componentDidMount() {
-  //   fetch("http://localhost:5000/questions/")
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       console.log("what the ");
-  //       this.setState({ listt: data });
-  //       //console.log(this.state.squares2)
-       
-  //     });
-  //     //console.log(this.state.squares)
-     
-  // }
-
-  chanh=()=>{
-    const no =  this.state.no + 1
-    console.log(no)
-    this.setState({
-      no: 2
-    });
-
+  componentDidMount() {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/questions`)
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({ listt: data.questions });
+      });
   }
 
   render() {
-
-    //console.log("man ",this.state.listt);
     return (
-      
       <div className="App">
         <header className="App-header">
           <img
@@ -73,16 +63,17 @@ class Form extends React.Component {
               <b> Online Survey </b>
             </div>
           </div>
-
         </header>
-
         <form>
-
-
-
-          {this.state.listt.map(question => (
-            // currently i used the id to hide but we'll  use the index in future
-            <div key={question.id} className={this.state.showNext[question.id]===true ? "show" :"hide"}>
+          {this.state.listt.map((question) => (
+            <div
+              key={question.id}
+              className={
+                this.state.showNext[this.state.listt.indexOf(question)] === true
+                  ? "show"
+                  : "hide"
+              }
+            >
               <h2>
                 <b>{question["text"]}</b>
               </h2>
@@ -90,12 +81,9 @@ class Form extends React.Component {
               <input
                 id={`${question["id"]}_Yes`}
                 className="radio-custom"
-                name={"azwindini"}
+                name={question["id"]}
                 type="radio"
                 value="Yes"
-                onClick={() => {
-                  this.setState({ firstQuestion: true });
-                }}
                 onChange={this.handleClick}
               />
               <label
@@ -112,9 +100,6 @@ class Form extends React.Component {
                 name={question["id"]}
                 type="radio"
                 value="No"
-                onClick={() => {
-                  this.setState({ firstQuestion: true });
-                }}
                 onChange={this.handleClick}
               />
               <label
@@ -126,7 +111,8 @@ class Form extends React.Component {
               </label>
             </div>
           ))}
-                  <div>
+        </form>
+        <div>
           <button
             className="btn"
             onClick={() => {
@@ -137,23 +123,19 @@ class Form extends React.Component {
             Submit{" "}
           </button>
         </div>
-        </form>
-
       </div>
     );
   }
 }
 
-const onSubmit = answersArray => {
-  fetch("http://localhost:5000/answer", {
+const onSubmit = (answersArray) => {
+  console.log(answersArray);
+  fetch(`${process.env.REACT_APP_BACKEND_URL}/answers`, {
     method: "POST",
     body: JSON.stringify({
-      answers: answersArray
+      answers: answersArray,
     }),
-    headers: { "Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json" },
   });
 };
 export default Form;
-
- 
-
