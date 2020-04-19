@@ -91,7 +91,9 @@ class Form extends React.Component {
             <div
               key={question.id}
               className={
-                this.state.ShowNextElement[question.id] === true
+                this.state.ShowNextElement[
+                  this.state.survey_questions.indexOf(question)
+                ] === true
                   ? "show"
                   : "hide"
               }
