@@ -41,6 +41,7 @@ class Form extends React.Component {
     ) {
       new_index = this.state.index + 1;
     }
+
     //we'll use the index to add each boolean on a specifix position
     showElemnts[new_index] = true;
     this.setState({
@@ -65,7 +66,6 @@ class Form extends React.Component {
   // }
 
   render() {
-    //console.log("man ",this.state.survey_questions);
     return (
       <div className="App">
         <header className="App-header">
@@ -108,9 +108,6 @@ class Form extends React.Component {
                 name={question["id"]}
                 type="radio"
                 value="Yes"
-                onClick={() => {
-                  this.setState({ firstQuestion: true });
-                }}
                 onChange={this.handleClick}
               />
               <label
@@ -127,9 +124,6 @@ class Form extends React.Component {
                 name={question["id"]}
                 type="radio"
                 value="No"
-                onClick={() => {
-                  this.setState({ firstQuestion: true });
-                }}
                 onChange={this.handleClick}
               />
               <label
@@ -141,18 +135,18 @@ class Form extends React.Component {
               </label>
             </div>
           ))}
-          <div>
-            <button
-              className="btn"
-              onClick={() => {
-                onSubmit(this.state.survey_final_answers);
-              }}
-            >
-              {" "}
-              Submit{" "}
-            </button>
-          </div>
         </form>
+        <div>
+          <button
+            className="btn"
+            onClick={() => {
+              onSubmit(this.state.survey_final_answers);
+            }}
+          >
+            {" "}
+            Submit{" "}
+          </button>
+        </div>
       </div>
     );
   }
