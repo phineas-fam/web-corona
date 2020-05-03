@@ -6,16 +6,7 @@ class Form extends React.Component {
     super(props);
     this.state = {
       survey_final_answers: {},
-      survey_questions: [
-        {
-          id: 0,
-          text:
-            "Have you come into close contact with someone who has tested positive for COVID19 ?",
-        },
-        { id: 1, text: "Do you have difficulty when breathing ?" },
-        { id: 2, text: "Do you have fever or a dry cough ?" },
-        { id: 3, text: "Do you have difficulty when breathing ?" },
-      ],
+      survey_questions: [],
       ShowNextElement: [true],
       // we'll use the index to access each booalean on the ShowNextElment list
       index: 1,
@@ -52,13 +43,13 @@ class Form extends React.Component {
     });
   };
 
-  // componentDidMount() {
-  //   fetch(`${process.env.REACT_APP_BACKEND_URL}/questions`)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       this.setState({ survey_questions: data.questions });
-  //     });
-  // }
+  componentDidMount() {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/questions`)
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({ survey_questions: data.questions });
+      });
+  }
 
   render() {
     return (
