@@ -13,6 +13,27 @@ class Form extends React.Component {
       current_question: null,
     };
   }
+  error() {
+    console.log("Unable to retrieve your location");
+  }
+
+  GetUserProvince = position => {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    fetch(`https://mapit.code4sa.org/point/4326/`+longitude+`,`+latitude)
+    .then((response) => response.json())
+    .then((data) => {
+      const Province_key = Object.keys(data)[0];
+      const Province_name = data[Province_key]["name"]
+      this.setState(
+        {
+          Province : Province_name,
+        },
+      );
+    });
+
+
+  }
 
   handleClick = (Event) => {
     // this will used to temporarily store answers
@@ -49,6 +70,7 @@ class Form extends React.Component {
       .then((data) => {
         this.setState({ survey_questions: data.questions });
       });
+      navigator.geolocation.getCurrentPosition(this.GetUserProvince, this.error);
   }
 
   render() {
@@ -72,6 +94,7 @@ class Form extends React.Component {
         </header>
 
         <form>
+          <h5>Province :{this.state.Province}  </h5>
           {this.state.survey_questions.map((question) => (
             // current_questionly i used the id to hide but we'll  use the index
             <div
