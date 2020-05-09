@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./App.css";
 
 class Form extends React.Component {
@@ -17,30 +18,37 @@ class Form extends React.Component {
     console.log("Unable to retrieve your location");
   }
 
-  GetUserProvince = position => {
+  GetUserProvince = (position) => {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    fetch(`https://mapit.code4sa.org/point/4326/`+longitude+`,`+latitude)
-    .then((response) => response.json())
-    .then((data) => {
-      const Province_key = Object.keys(data)[0];
-      const Province_name = data[Province_key]["name"]
-      this.setState(
-        {
-          Province : Province_name,
-        },
-      );
-    });
-
-
-  }
+    fetch(`https://mapit.code4sa.org/point/4326/` + longitude + `,` + latitude)
+      .then((response) => response.json())
+      .then((data) => {
+        const Province_key = Object.keys(data)[0];
+        const Province_name = data[Province_key]["name"];
+        this.setState({
+          Province: Province_name,
+          Longitude: longitude,
+          Latitude: latitude,
+        });
+      });
+  };
 
   handleClick = (Event) => {
     // this will used to temporarily store answers
     const temp_answers = this.state.survey_final_answers;
+
+    console.log(temp_answers);
     const question = Event.target.name;
     const answer = Event.target.value;
-    temp_answers[question] = { question: question, text: answer };
+    const question_name = "q" + question;
+    temp_answers[question_name] = answer;
+
+    if (this.state.index === 1) {
+      temp_answers["latitude"] = this.state.Latitude;
+      temp_answers["longitude"] = this.state.Longitude;
+      temp_answers["province"] = this.state.Province;
+    }
     //  this will used for hiding elemts , each boolean determines if we should hide or not
     // if a boolean at position 0 is true then we'll show the question at position 0
     // if a boolean at position 1 is false then we'll hide the question at position 1
@@ -65,12 +73,12 @@ class Form extends React.Component {
   };
 
   componentDidMount() {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/questions`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/questions/`)
       .then((response) => response.json())
       .then((data) => {
         this.setState({ survey_questions: data.questions });
       });
-      navigator.geolocation.getCurrentPosition(this.GetUserProvince, this.error);
+    navigator.geolocation.getCurrentPosition(this.GetUserProvince, this.error);
   }
 
   render() {
@@ -94,7 +102,7 @@ class Form extends React.Component {
         </header>
 
         <form>
-          <h5>Province :{this.state.Province}  </h5>
+          <h5>Province :{this.state.Province} </h5>
           {this.state.survey_questions.map((question) => (
             // current_questionly i used the id to hide but we'll  use the index
             <div
@@ -146,15 +154,17 @@ class Form extends React.Component {
           ))}
         </form>
         <div>
-          <button
-            className="btn"
-            onClick={() => {
-              onSubmit(this.state.survey_final_answers);
-            }}
-          >
-            {" "}
-            Submit{" "}
-          </button>
+          <Link to="/">
+            <button
+              className={this.state.index === 8 ? "btn" : "hide"}
+              onClick={() => {
+                onSubmit(this.state.survey_final_answers);
+              }}
+            >
+              {" "}
+              Submit{" "}
+            </button>
+          </Link>
         </div>
       </div>
     );
