@@ -156,7 +156,11 @@ class Form extends React.Component {
         <div>
           <Link to="/">
             <button
-              className={this.state.index === 8 ? "btn" : "hide"}
+              className={
+                this.state.index === this.state.survey_questions.length
+                  ? "btn"
+                  : "hide"
+              }
               onClick={() => {
                 onSubmit(this.state.survey_final_answers);
               }}
