@@ -1,4 +1,7 @@
 import React from "react";
+import Popup from "reactjs-popup";
+import success from "./images/success.png";
+
 import { Link } from "react-router-dom";
 import "./App.css";
 
@@ -33,6 +36,30 @@ class Form extends React.Component {
         });
       });
   };
+
+  PopupPage = () => {
+    return (
+      <div className="App">
+          <img
+            className="logo"
+            src={success}
+            alt="success icon"
+            style={{ marginBottom: " 3%" }}
+          />
+
+          <h4>Survey successfully completed </h4>
+   
+          <Link to="/">
+          <button
+            className="btn" 
+            onClick={() => {onSubmit(this.state.survey_final_answers);}}
+            >
+            Okay
+            </button>
+          </Link>
+
+      </div>);
+  }
 
   handleClick = (Event) => {
     // this will used to temporarily store answers
@@ -153,22 +180,24 @@ class Form extends React.Component {
             </div>
           ))}
         </form>
+
         <div>
-          <Link to="/">
+          <Popup modal trigger={
             <button
               className={
                 this.state.index === this.state.survey_questions.length
                   ? "btn"
-                  : "hide"
+                  : "btn"
               }
-              onClick={() => {
-                onSubmit(this.state.survey_final_answers);
-              }}
             >
-              {" "}
-              Submit{" "}
+              Submit
             </button>
-          </Link>
+            }
+            >
+              <div>
+                {this.PopupPage()}
+              </div>
+          </Popup>
         </div>
       </div>
     );
@@ -183,5 +212,7 @@ const onSubmit = (answersArray) => {
     }),
     headers: { "Content-Type": "application/json" },
   });
+
+
 };
 export default Form;
