@@ -1,4 +1,6 @@
 import React from "react";
+import { IoMdMenu,IoMdClose } from "react-icons/io";
+import ResponsiveMenu from 'react-responsive-navbar';
 import Popup from "reactjs-popup";
 import success from "./images/success.png";
 
@@ -20,6 +22,20 @@ class Form extends React.Component {
   error() {
     console.log("Unable to retrieve your location");
   }
+
+  showMenu=()=>{
+    this.setState({
+        show: true
+    })
+
+}
+        
+hideMenu=()=>{
+    this.setState({
+        show: false
+    })
+
+}
 
   GetUserProvince = (position) => {
     const latitude = position.coords.latitude;
@@ -47,7 +63,7 @@ class Form extends React.Component {
             style={{ marginBottom: " 3%" }}
           />
 
-          <h4>Survey successfully completed </h4>
+          <h4>Survey successfully completed {this.state.index} </h4>
    
           <Link to="/">
           <button
@@ -110,6 +126,54 @@ class Form extends React.Component {
 
   render() {
     return (
+      <div className="SurveyContainer">
+            <div className={
+                this.state.show ===true
+                  ? "navbarResponsive"
+                  : "navbar"
+              } >
+                <ResponsiveMenu
+                menuOpenButton={<IoMdMenu size={30} onClick={this.showMenu} style={{marginLeft:290,marginTop:15}}/>}
+                menuCloseButton={<IoMdClose size={30}  onClick={this.hideMenu} style={{marginLeft:290,marginTop:15}} />}
+                changeMenuOn="500px"
+                largeMenuClassName="large-menu"
+                smallMenuClassName="small-menu"
+                menu={
+                    <div className="navContent">
+                        <ul >
+                        <hr className="Linebreaks" color='white' style={{marginLeft:-40,height:1}}/>
+                            <Link to="/">
+                                <li >
+                                <a href="javascript:void(0)" >Home</a>
+                                </li>
+                            </Link>
+                            
+                            {/* <hr className="Linebreaks" color='white' style={{marginLeft:-40,height:1}}/> */}
+                            <Link to="/App">
+                                <li >
+                                <a  href="javascript:void(0)" className="MainPage">Survey</a>
+                                </li>
+                            </Link>
+                            {/* <hr className="Linebreaks" color='white' style={{marginLeft:-40,height:1}}/> */}
+
+                            <Link to="/Guidelines">
+                            <li>
+                            <a href="javascript:void(0)">Safety Guidelines</a>
+                            </li>
+                            </Link>
+                        </ul> 
+                    </div>}
+                />
+            </div>
+            <h2 style={{
+                position:'absolute',
+                top:0,
+                color:'white',
+                left:20}}>
+
+                #StayAtHome
+            </h2>
+
       <div className="App">
         <header className="App-header">
           <img
@@ -120,10 +184,10 @@ class Form extends React.Component {
           />
           <div className="heading">
             <div style={{ fontSize: "40px" }}>
-              <b> Covid-19 </b>
+              <b style={{color:'#8fb24f'}} > Covid-19 </b>
             </div>
             <div style={{ fontSize: "30px" }}>
-              <b> Online Survey </b>
+              <b style={{color:'#8fb24f'}}> Online Survey </b>
             </div>
           </div>
         </header>
@@ -142,9 +206,9 @@ class Form extends React.Component {
                   : "hide"
               }
             >
-              <h2>
+              <h3 style={{color:'#8fb24f'}}>
                 <b>{question["text"]}</b>
-              </h2>
+              </h3>
 
               <input
                 id={`${question["id"]}_Yes`}
@@ -199,6 +263,7 @@ class Form extends React.Component {
               </div>
           </Popup>
         </div>
+      </div>
       </div>
     );
   }

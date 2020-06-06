@@ -3,14 +3,17 @@ import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./index.css";
 import App from "./App";
-import TipsPage from "./TipsPage";
+import Guidelines from "./Guidelines";
+import HomePage from "./HomePage";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={TipsPage} />
+
+        <Route exact path="/" component={HomePage}  />
+        <Route path="/Guidelines" component={Guidelines}/> 
         <Route path="/App" component={App} />
       </Switch>
     </BrowserRouter>

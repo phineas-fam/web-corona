@@ -9,6 +9,36 @@
   box-sizing: border-box;
 
 }
+.SurveyContainer{
+  overflow-x: hidden;
+}
+.navbar{
+  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);
+  border-top: 1px solid #8fb24f;
+  position: sticky;
+  top: 0;
+  width: auto;
+  height: 4em ;
+  background-color: #8fb24f;}
+
+.Linebreaks{
+  display: none;
+}
+.SurveyContainer .navContent a {
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 20px;
+  padding-bottom: 1em;
+
+  color: white;}
+
+
+.navContent li {
+  display: inline;
+  font-size: 15px;
+  list-style-type: none;
+  margin-left: 30px;
+}
 
 .hide {
   visibility: hidden;
@@ -93,11 +123,12 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.SurveyContainer .MainPage {
+  border-bottom: 4px solid red;
 }
+
+
+
 
 .App-header {
   /* background-color: #282c34; */
@@ -136,13 +167,12 @@
   color: white;
 }
 
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media (max-width: 500px) {
+  .SurveyContainer .MainPage {
+    border-bottom: 0;
   }
+  
+  
 
-  to {
-    transform: rotate(360deg);
-  }
+
 }
