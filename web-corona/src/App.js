@@ -1,6 +1,5 @@
 import React from "react";
-import { IoMdMenu,IoMdClose } from "react-icons/io";
-import ResponsiveMenu from 'react-responsive-navbar';
+import NavBar from "./NavBar";
 import Popup from "reactjs-popup";
 import success from "./images/success.png";
 
@@ -23,24 +22,10 @@ class Form extends React.Component {
     console.log("Unable to retrieve your location");
   }
 
-  showMenu=()=>{
-    this.setState({
-        show: true
-    })
-
-}
-        
-hideMenu=()=>{
-    this.setState({
-        show: false
-    })
-
-}
-
   GetUserProvince = (position) => {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    fetch(`https://mapit.code4sa.org/point/4326/` + longitude + `,` + latitude)
+    fetch(`https://mapit.code4sa.org/point/4326/${longitude},${latitude}`)
       .then((response) => response.json())
       .then((data) => {
         const Province_key = Object.keys(data)[0];
@@ -56,26 +41,28 @@ hideMenu=()=>{
   PopupPage = () => {
     return (
       <div className="App">
-          <img
-            className="logo"
-            src={success}
-            alt="success icon"
-            style={{ marginBottom: " 3%" }}
-          />
+        <img
+          className="logo"
+          src={success}
+          alt="success icon"
+          style={{ marginBottom: " 3%" }}
+        />
 
-          <h4>Survey successfully completed {this.state.index} </h4>
-   
-          <Link to="/">
+        <h4>Survey successfully completed {this.state.index} </h4>
+
+        <Link to="/">
           <button
-            className="btn" 
-            onClick={() => {onSubmit(this.state.survey_final_answers);}}
-            >
+            className="btn"
+            onClick={() => {
+              onSubmit(this.state.survey_final_answers);
+            }}
+          >
             Okay
-            </button>
-          </Link>
-
-      </div>);
-  }
+          </button>
+        </Link>
+      </div>
+    );
+  };
 
   handleClick = (Event) => {
     // this will used to temporarily store answers
@@ -127,143 +114,97 @@ hideMenu=()=>{
   render() {
     return (
       <div className="SurveyContainer">
-            <div className={
-                this.state.show ===true
-                  ? "navbarResponsive"
-                  : "navbar"
-              } >
-                <ResponsiveMenu
-                menuOpenButton={<IoMdMenu size={30} onClick={this.showMenu} style={{marginLeft:290,marginTop:15}}/>}
-                menuCloseButton={<IoMdClose size={30}  onClick={this.hideMenu} style={{marginLeft:290,marginTop:15}} />}
-                changeMenuOn="500px"
-                largeMenuClassName="large-menu"
-                smallMenuClassName="small-menu"
-                menu={
-                    <div className="navContent">
-                        <ul >
-                        <hr className="Linebreaks" color='white' style={{marginLeft:-40,height:1}}/>
-                            <Link to="/">
-                                <li >
-                                <a href="javascript:void(0)" >Home</a>
-                                </li>
-                            </Link>
-                            
-                            {/* <hr className="Linebreaks" color='white' style={{marginLeft:-40,height:1}}/> */}
-                            <Link to="/App">
-                                <li >
-                                <a  href="javascript:void(0)" className="MainPage">Survey</a>
-                                </li>
-                            </Link>
-                            {/* <hr className="Linebreaks" color='white' style={{marginLeft:-40,height:1}}/> */}
-
-                            <Link to="/Guidelines">
-                            <li>
-                            <a href="javascript:void(0)">Safety Guidelines</a>
-                            </li>
-                            </Link>
-                        </ul> 
-                    </div>}
-                />
-            </div>
-            <h2 style={{
-                position:'absolute',
-                top:0,
-                color:'white',
-                left:20}}>
-
-                #StayAtHome
-            </h2>
-
-      <div className="App">
-        <header className="App-header">
-          <img
-            className="logo"
-            src="https://img.icons8.com/bubbles/100/000000/todo-list.png"
-            alt="task icon"
-            style={{ marginBottom: " 3%" }}
-          />
-          <div className="heading">
-            <div style={{ fontSize: "40px" }}>
-              <b style={{color:'#8fb24f'}} > Covid-19 </b>
-            </div>
-            <div style={{ fontSize: "30px" }}>
-              <b style={{color:'#8fb24f'}}> Online Survey </b>
-            </div>
-          </div>
-        </header>
-
-        <form>
-          <h5>Province :{this.state.Province} </h5>
-          {this.state.survey_questions.map((question) => (
-            // current_questionly i used the id to hide but we'll  use the index
-            <div
-              key={question.id}
-              className={
-                this.state.ShowNextElement[
-                  this.state.survey_questions.indexOf(question)
-                ] === true
-                  ? "show"
-                  : "hide"
-              }
-            >
-              <h3 style={{color:'#8fb24f'}}>
-                <b>{question["text"]}</b>
-              </h3>
-
-              <input
-                id={`${question["id"]}_Yes`}
-                className="radio-custom"
-                name={question["id"]}
-                type="radio"
-                value="Yes"
-                onChange={this.handleClick}
-              />
-              <label
-                htmlFor={`${question["id"]}_Yes`}
-                style={{ fontSize: "14px" }}
-                className="radio-custom-label"
-              >
-                Yes
-              </label>
-
-              <input
-                id={`${question["id"]}_No`}
-                className="radio-custom"
-                name={question["id"]}
-                type="radio"
-                value="No"
-                onChange={this.handleClick}
-              />
-              <label
-                htmlFor={`${question["id"]}_No`}
-                style={{ fontSize: "14px" }}
-                className="radio-custom-label"
-              >
-                No
-              </label>
-            </div>
-          ))}
-        </form>
-
-        <div>
-          <Popup modal trigger={
-            <button
-              className={
-                this.state.index === this.state.survey_questions.length
-                  ? "btn"
-                  : "btn"
-              }
-            >
-              Submit
-            </button>
-            }
-            >
-              <div>
-                {this.PopupPage()}
+        <NavBar />
+        <div className="App">
+          <header className="App-header">
+            <img
+              className="logo"
+              src="https://img.icons8.com/bubbles/100/000000/todo-list.png"
+              alt="task icon"
+              style={{ marginBottom: " 3%" }}
+            />
+            <div className="heading">
+              <div style={{ fontSize: "40px" }}>
+                <b style={{ color: "#8fb24f" }}> Covid-19 </b>
               </div>
-          </Popup>
+              <div style={{ fontSize: "30px" }}>
+                <b style={{ color: "#8fb24f" }}> Online Survey </b>
+              </div>
+            </div>
+          </header>
+
+          <form>
+            <h5>Province :{this.state.Province} </h5>
+            {this.state.survey_questions.map((question) => (
+              // current_questionly i used the id to hide but we'll  use the index
+              <div
+                key={question.id}
+                className={
+                  this.state.ShowNextElement[
+                    this.state.survey_questions.indexOf(question)
+                  ] === true
+                    ? "show"
+                    : "hide"
+                }
+              >
+                <h3 style={{ color: "#8fb24f" }}>
+                  <b>{question["text"]}</b>
+                </h3>
+
+                <input
+                  id={`${question["id"]}_Yes`}
+                  className="radio-custom"
+                  name={question["id"]}
+                  type="radio"
+                  value="Yes"
+                  onChange={this.handleClick}
+                />
+                <label
+                  htmlFor={`${question["id"]}_Yes`}
+                  style={{ fontSize: "14px" }}
+                  className="radio-custom-label"
+                >
+                  Yes
+                </label>
+
+                <input
+                  id={`${question["id"]}_No`}
+                  className="radio-custom"
+                  name={question["id"]}
+                  type="radio"
+                  value="No"
+                  onChange={this.handleClick}
+                />
+                <label
+                  htmlFor={`${question["id"]}_No`}
+                  style={{ fontSize: "14px" }}
+                  className="radio-custom-label"
+                >
+                  No
+                </label>
+              </div>
+            ))}
+          </form>
+
+          <div>
+            <Popup
+              modal
+              trigger={
+                <button
+                  className={
+                    this.state.index === this.state.survey_questions.length
+                      ? "btn"
+                      : "btn"
+                  }
+                >
+                  Submit
+                </button>
+              }
+            >
+              <div>{this.PopupPage()}</div>
+            </Popup>
+          </div>
         </div>
-      </div>
       </div>
     );
   }
@@ -277,7 +218,5 @@ const onSubmit = (answersArray) => {
     }),
     headers: { "Content-Type": "application/json" },
   });
-
-
 };
 export default Form;

@@ -11,9 +11,8 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Switch>
-
-        <Route exact path="/" component={HomePage}  />
-        <Route path="/Guidelines" component={Guidelines}/> 
+        <Route exact path="/" component={HomePage} />
+        <Route path="/Guidelines" component={Guidelines} />
         <Route path="/App" component={App} />
       </Switch>
     </BrowserRouter>
