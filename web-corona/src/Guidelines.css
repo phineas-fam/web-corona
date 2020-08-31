@@ -102,8 +102,8 @@
     margin-left: 2%;
   }
 
-  .GuidelinesContainer .MainPage {
-    border-bottom: 0;
+  .GuidelinesContainer .Guideline {
+    border-bottom: 0px solid red;
   }
 
   .header {

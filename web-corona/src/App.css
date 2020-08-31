@@ -9,7 +9,10 @@
   box-sizing: border-box;
 
 }
+.SurveyContainer h3{
+  color: #8fb24f;
 
+}
 .SurveyContainer .Survey {
   border-bottom: 4px solid red;
 }
@@ -139,9 +142,11 @@
 }
 
 @media (max-width: 500px) {
-  .SurveyContainer .MainPage {
-    border-bottom: 0;
+
+  .SurveyContainer .Survey {
+    border-bottom: 0px solid red;
   }
+  
 
 
 

@@ -1,5 +1,6 @@
 .HomeContainer {
-  overflow-x: hidden;
+  overflow: hidden;
+  scrollbar-color: transparent transparent;
 }
 
 .HomeContainer .MainPage {
@@ -16,7 +17,7 @@
 .Map {
   margin-top: 2em;
   width: 1000px;
-  height: 1000px;
+  height: 850px;
 }
 
 .ZA-EC:hover,
@@ -163,9 +164,7 @@
     color: #8fb24f;
   }
 
-  * {
-    color: white;
-  }
+
 
   .HomeContainer .MainPage {
     border-bottom: 0px solid red;

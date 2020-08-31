@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import NavBar from "./NavBar";
 import Popover from "react-simple-popover";
-
+import Button from 'react-bootstrap/Button'
+import Nav from 'react-bootstrap/Nav'
 import "./Homepage.css";
+import Home from './HomePage.js'
 
 export default class MainPage extends Component {
   constructor(props) {
@@ -30,7 +32,9 @@ export default class MainPage extends Component {
   render() {
     return (
       <div className="HomeContainer">
-        <NavBar />
+
+        <NavBar/>
+        
         <div className="PopoverContainer">
           <Popover
             placement="top"
@@ -146,7 +150,7 @@ export default class MainPage extends Component {
             ></path>
           </svg>
         </div>
-        <div className="SummaryContainer">
+        {/* <div className="SummaryContainer">
           <div className="ActiveContainer">
             <h2 style={{ color: "black" }}> Active cases</h2>
             <h1>1000</h1>
@@ -162,7 +166,7 @@ export default class MainPage extends Component {
               <h1>1000</h1>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }

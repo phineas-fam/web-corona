@@ -1,7 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
 import Popup from "reactjs-popup";
-import success from "./images/success.png";
 
 import { Link } from "react-router-dom";
 import "./App.css";
@@ -11,11 +10,12 @@ class Form extends React.Component {
     super(props);
     this.state = {
       survey_final_answers: {},
-      survey_questions: [],
+      weightTotal : 0,
+      CurrentWeight : 0 ,
+      survey_questions: [{ text: 'Sore throat', weight: 4 },{ text: 'Flu', weight: 2 },{ text: 'Struggle Breathing', weight: 6 },{ text: 'Headache', weight: 3 }],
       ShowNextElement: [true],
-      // we'll use the index to access each booalean on the ShowNextElment list
-      index: 1,
-      current_question: null,
+      index: 0,
+      AnsweredQuestions: [],
     };
   }
   error() {
@@ -32,23 +32,47 @@ class Form extends React.Component {
         const Province_name = data[Province_key]["name"];
         this.setState({
           Province: Province_name,
-          Longitude: longitude,
-          Latitude: latitude,
+
         });
       });
   };
 
   PopupPage = () => {
+    var SurveyweightTotal = 0
+    let Risk
+    let results 
+    let riskcolor
+    let Advice
+    if(this.state.index === this.state.survey_questions.length){
+      this.state.survey_questions.forEach(element => {
+        SurveyweightTotal = SurveyweightTotal + element.weight
+      
+    });
+//Convert the results to percentage
+    results =  ((this.state.weightTotal/SurveyweightTotal)*100).toFixed(0)
+   
+    if (results < 50){
+      Risk = results < 26 ? 'Very Low Risk' : 'Low Risk'
+      riskcolor = Risk === 'Low Risk' ? 'orange' : 'Green'
+      Advice = Risk === 'Low Risk' ? 'unlikely to have corona, keep wearing your mask' : 'No signs of corona, keep a good hygiene'
+    }
+    else{
+      Risk = results < 75 ? 'Medium Risk' : 'High Risk'
+      riskcolor = Risk === 'High Risk' ? 'Red' : 'Orange'
+      Advice = Risk === 'Medium Risk' ? 'Observe the symptoms closely and see a doctor if get worse' : 'Please see a doctor immediately'
+
+    }
+    
+
+  }
+
     return (
       <div className="App">
-        <img
-          className="logo"
-          src={success}
-          alt="success icon"
-          style={{ marginBottom: " 3%" }}
-        />
 
-        <h4>Survey successfully completed {this.state.index} </h4>
+        <h4 style={{color:riskcolor}}>Results : {Risk}  </h4>
+        <h5> {Advice}  </h5>
+
+        <h6> Thank you for completing the survey  </h6>
 
         <Link to="/">
           <button
@@ -57,7 +81,7 @@ class Form extends React.Component {
               onSubmit(this.state.survey_final_answers);
             }}
           >
-            Okay
+            Close
           </button>
         </Link>
       </div>
@@ -65,40 +89,50 @@ class Form extends React.Component {
   };
 
   handleClick = (Event) => {
-    // this will used to temporarily store answers
-    const temp_answers = this.state.survey_final_answers;
 
-    console.log(temp_answers);
-    const question = Event.target.name;
+    const CurrentSurvey = this.state.survey_final_answers;
+    const questionId = Event.target.name;
     const answer = Event.target.value;
-    const question_name = "q" + question;
-    temp_answers[question_name] = answer;
 
-    if (this.state.index === 1) {
-      temp_answers["latitude"] = this.state.Latitude;
-      temp_answers["longitude"] = this.state.Longitude;
-      temp_answers["province"] = this.state.Province;
-    }
-    //  this will used for hiding elemts , each boolean determines if we should hide or not
-    // if a boolean at position 0 is true then we'll show the question at position 0
-    // if a boolean at position 1 is false then we'll hide the question at position 1
-    const showElemnts = this.state.ShowNextElement;
+    const question_name = "Q" + questionId;
+    CurrentSurvey[question_name] = answer;
+    CurrentSurvey["province"] = this.state.Province;
+
+
     let new_index = this.state.index;
-    //we'll only update the index when the user clicks on a different question
+    var newWeight = this.state.weightTotal
+    let AddtoWeight;
+    let MinusToWeight;
+
     if (
-      this.state.current_question !== null &&
-      this.state.current_question !== question
+  
+      this.state.AnsweredQuestions.indexOf(questionId) === -1
     ) {
-      new_index = this.state.index + 1;
+      new_index = new_index + 1;
+      AddtoWeight = this.state.weightTotal +  this.state.survey_questions[questionId-1].weight
+      newWeight = answer==="Yes"? AddtoWeight : this.state.weightTotal 
+
+    }
+    else{
+
+      // new_index = this.state.index + 1;
+      AddtoWeight = this.state.weightTotal +  this.state.survey_questions[questionId-1].weight
+      MinusToWeight = this.state.weightTotal -  this.state.survey_questions[questionId-1].weight
+      newWeight = answer==="Yes"? AddtoWeight : MinusToWeight
     }
 
-    //we'll use the index to add each boolean on a specifix position
+
+    var newAnsweredQuestions = this.state.AnsweredQuestions
+    newAnsweredQuestions.push(questionId)
+
+    const showElemnts = this.state.ShowNextElement;
     showElemnts[new_index] = true;
     this.setState({
-      survey_final_answers: temp_answers,
+      survey_final_answers: CurrentSurvey,
       ShowNextElement: showElemnts,
       index: new_index,
-      current_question: question,
+      weightTotal : newWeight,
+      AnsweredQuestions: newAnsweredQuestions,
     });
   };
 
@@ -134,11 +168,11 @@ class Form extends React.Component {
           </header>
 
           <form>
-            <h5>Province :{this.state.Province} </h5>
-            {this.state.survey_questions.map((question) => (
+            <h5>Province : {this.state.Province} </h5>
+            {this.state.survey_questions.map((question, index) => (
               // current_questionly i used the id to hide but we'll  use the index
               <div
-                key={question.id}
+                key={index}
                 className={
                   this.state.ShowNextElement[
                     this.state.survey_questions.indexOf(question)
@@ -147,20 +181,20 @@ class Form extends React.Component {
                     : "hide"
                 }
               >
-                <h3 style={{ color: "#8fb24f" }}>
+                <h3 className="AppH3" >
                   <b>{question["text"]}</b>
                 </h3>
 
                 <input
-                  id={`${question["id"]}_Yes`}
+                  id={`${index}_Yes`}
                   className="radio-custom"
-                  name={question["id"]}
+                  name={index+1}
                   type="radio"
                   value="Yes"
                   onChange={this.handleClick}
                 />
                 <label
-                  htmlFor={`${question["id"]}_Yes`}
+                  htmlFor={`${index}_Yes`}
                   style={{ fontSize: "14px" }}
                   className="radio-custom-label"
                 >
@@ -168,15 +202,15 @@ class Form extends React.Component {
                 </label>
 
                 <input
-                  id={`${question["id"]}_No`}
+                  id={`${index}_No`}
                   className="radio-custom"
-                  name={question["id"]}
+                  name={index+1}
                   type="radio"
                   value="No"
                   onChange={this.handleClick}
                 />
                 <label
-                  htmlFor={`${question["id"]}_No`}
+                  htmlFor={`${index}_No`}
                   style={{ fontSize: "14px" }}
                   className="radio-custom-label"
                 >
