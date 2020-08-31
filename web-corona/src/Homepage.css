@@ -1,5 +1,7 @@
+
 .HomeContainer {
-  overflow: hidden;
+  overflow-y: hidden ;
+  /* overflow: hidden; */
   scrollbar-color: transparent transparent;
 }
 

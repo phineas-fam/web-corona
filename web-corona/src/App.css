@@ -6,8 +6,14 @@
 * {
   font-family: myFirstFont;
   /* font-size: 1rem; */
+  /* height: 100% ; */
+  /* width: 100%; */
   box-sizing: border-box;
 
+}
+::-webkit-scrollbar {
+  width: 0px;  /* Remove scrollbar space */
+  background: transparent;  /* Optional: just make scrollbar invisible */
 }
 .SurveyContainer h3{
   color: #8fb24f;
@@ -15,11 +21,9 @@
 }
 .SurveyContainer .Survey {
   border-bottom: 4px solid red;
+  
 }
 
-.SurveyContainer {
-  overflow-x: hidden;
-}
 
 .hide {
   visibility: hidden;
